@@ -6,7 +6,7 @@ import numpy as np
 import sys
 import os
 
-main_gui_file_name = "main_gui.ui"
+main_gui_file_name = "/Users/anonymous/Desktop/open_lcd_assissatnt/open_lcd_assistant/main_gui.ui"
 EIGHT_BIT = 8
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType(main_gui_file_name)
