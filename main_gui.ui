@@ -83,6 +83,32 @@
      </rect>
     </property>
    </widget>
+   <widget class="QRadioButton" name="radio_vertical">
+    <property name="geometry">
+     <rect>
+      <x>147</x>
+      <y>615</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>vertical</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radio_horizontal">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>615</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>horizontal</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
