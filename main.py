@@ -22,6 +22,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.load_button.clicked.connect(self.load_image)
         self.save_button.clicked.connect(self.save_bmp_txt)
+        self.convert_button.clicked.connect(self.convert_image)
 
     def load_image(self):
         # Get the image path
@@ -50,6 +51,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.image_view.setScene(scene)
 
 
+    def convert_image(self):
+        vertical = self.radio_vertical.isChecked()
+        horizontal = self.radio_horizontal.isChecked()
+        if vertical:
+            print("vertical")
+        if horizontal:
+            print("horizontal")
+        pass
     def save_bmp_txt(self):
         pass
 

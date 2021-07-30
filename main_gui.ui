@@ -83,11 +83,11 @@
      </rect>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton">
+   <widget class="QRadioButton" name="radio_vertical">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>616</y>
+      <x>160</x>
+      <y>614</y>
       <width>100</width>
       <height>20</height>
      </rect>
@@ -96,11 +96,11 @@
      <string>vertical</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_2">
+   <widget class="QRadioButton" name="radio_horizontal">
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>615</y>
+      <y>614</y>
       <width>100</width>
       <height>20</height>
      </rect>
