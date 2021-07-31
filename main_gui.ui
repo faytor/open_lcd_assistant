@@ -50,7 +50,7 @@
      <set>Qt::ImhMultiLine</set>
     </property>
     <property name="plainText">
-     <string notr="true"/>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="save_button">
@@ -67,6 +67,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="convert_button">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>36</x>
