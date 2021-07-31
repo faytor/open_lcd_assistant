@@ -12,17 +12,28 @@ EIGHT_BIT = 8
 Ui_MainWindow, QtBaseClass = uic.loadUiType(main_gui_file_name)
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
-    __image_path = ""
+    __image_path = None
     __image_width = 0
     __image_height = 0
+    image_array = None
 
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+        self.init_gui()
         self.load_button.clicked.connect(self.load_image)
         self.save_button.clicked.connect(self.save_bmp_txt)
         self.convert_button.clicked.connect(self.convert_image)
+
+
+    def init_gui(self):
+        self.radio_vertical.setChecked(True)
+        self.convert_button.setEnabled(False)
+        self.save_button.setEnabled(False)
+        self.radio_vertical.setEnabled(False)
+        self.radio_horizontal.setEnabled(False)
+
 
     def load_image(self):
         # Get the image path
@@ -34,10 +45,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             image = Image.open(self.__image_path)
             # convert it to monochrom bitmap and creat np array
             image_bmp = image.convert('1')
-            image_array = np.asarray(image_bmp,dtype=int)
-            self.__image_width, self.__image_height = image_array.shape
+            self.image_array = np.asarray(image_bmp,dtype=int)
+            self.__image_width, self.__image_height = self.image_array.shape
             # display the image
             self.__display_image()
+            self.convert_button.setEnabled(True)
+            self.radio_vertical.setEnabled(True)
+            self.radio_horizontal.setEnabled(True)
 
 
     def __display_image(self):
@@ -55,7 +69,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         vertical = self.radio_vertical.isChecked()
         horizontal = self.radio_horizontal.isChecked()
         if vertical:
-            print("vertical")
+            self.__convert_vertical()
+            self.save_button.setEnabled(True)
         if horizontal:
             print("horizontal")
         pass
@@ -63,16 +78,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         pass
 
 
-    def __format_image(self, width, height, moon_array):
-        pad_x, pad_y =(EIGHT_BIT - (width % EIGHT_BIT)), (EIGHT_BIT - (height%EIGHT_BIT))
-        formated_image_array  = np.pad(moon_array,  [(0,pad_x ), (0,pad_y )], mode='constant')
+    def __format_image(self):
+        pad_x, pad_y =(EIGHT_BIT - (self.__image_width % EIGHT_BIT)), (EIGHT_BIT - (self.__image_height%EIGHT_BIT))
+        formated_image_array  = np.pad(self.image_array,  [(0,pad_x ), (0,pad_y )], mode='constant')
 
         return formated_image_array
 
 
     def __convert_vertical(self):
-        byte_array = ""
+        byte_array = ''
         index = 0
+        pad_array = self.__format_image()
         for y in range(0,self.__image_width,EIGHT_BIT):
             for x in range(self.__image_height):
                 one_byte = pad_array[y:y+8,x]
@@ -82,11 +98,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 if index%16 == 0:
                     byte_array += '\n'
                     
-        byte_array = '{\n' + byte_array.strip()[:-1] + '};' # remove the last comma  
-        
+        byte_array = f'const unsigned char bitmap_{os.path.basename(self.__image_path)[:-4]} [] PROGMEM ={{\n' + byte_array.strip()[:-1] + '};' # remove the last comma  
+        #print(byte_array)
+        self.plainTextEdit.setPlainText(byte_array)
         return byte_array 
 
-
+    def __convert_horizontal(self):
+        pass
 
 
 
