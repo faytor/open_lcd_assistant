@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtGui import QPixmap
 from PIL import Image
@@ -73,9 +73,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.save_button.setEnabled(True)
         if horizontal:
             print("horizontal")
-        pass
+
+
     def save_bmp_txt(self):
-        pass
+        save_file_name = f'bitmap_{os.path.basename(self.__image_path)[:-4]}'
+        save_path, filter = QFileDialog.getSaveFileName(self, "Save file as (*.txt)", save_file_name, "Text files (*.txt)")
+
+        if not save_path:
+            return
+        text = self.plainTextEdit.toPlainText()
+        with open(save_path, 'w') as f:
+            f.write(text)
 
 
     def __format_image(self):

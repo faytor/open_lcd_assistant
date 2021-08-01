@@ -102,7 +102,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>vertical</string>
+     <string>Vertical</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="radio_horizontal">
@@ -115,7 +115,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>horizontal</string>
+     <string>Horizontal</string>
     </property>
    </widget>
   </widget>
