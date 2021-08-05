@@ -6,6 +6,11 @@ import numpy as np
 import sys
 import os
 
+"""
+References:
+    - https://xbm.jazzychad.net/
+"""
+
 main_gui_file_name = "/Users/anonymous/Desktop/open_lcd_assissatnt/open_lcd_assistant/main_gui.ui"
 EIGHT_BIT = 8
 
@@ -89,7 +94,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __format_image(self):
         pad_x, pad_y =(EIGHT_BIT - (self.__image_width % EIGHT_BIT)), (EIGHT_BIT - (self.__image_height%EIGHT_BIT))
         formated_image_array  = np.pad(self.image_array,  [(0,pad_x ), (0,pad_y )], mode='constant')
-
+        print(formated_image_array.shape)
         return formated_image_array
 
 
