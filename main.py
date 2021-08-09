@@ -9,6 +9,7 @@ import os
 """
 References:
     - https://xbm.jazzychad.net/
+    - http://javl.github.io/image2cpp/
 """
 
 main_gui_file_name = "/Users/anonymous/Desktop/open_lcd_assissatnt/open_lcd_assistant/main_gui.ui"
@@ -52,6 +53,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             image_bmp = image.convert('1')
             self.image_array = np.asarray(image_bmp,dtype=int)
             self.__image_width, self.__image_height = self.image_array.shape
+            print(self.image_array)
             # display the image
             self.__display_image()
             self.convert_button.setEnabled(True)
@@ -93,10 +95,21 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def __format_image(self):
-        pad_x, pad_y =(EIGHT_BIT - (self.__image_width % EIGHT_BIT)), (EIGHT_BIT - (self.__image_height%EIGHT_BIT))
-        formated_image_array  = np.pad(self.image_array,  [(0,pad_x ), (0,pad_y )], mode='constant')
-        print(formated_image_array.shape)
+
+        if (self.__image_width % EIGHT_BIT) == 0:
+            pad_width = 0
+        elif (self.__image_width % EIGHT_BIT) != 0:
+            pad_width = EIGHT_BIT - (self.__image_width % EIGHT_BIT)
+
+        if (self.__image_height % EIGHT_BIT) == 0:
+            pad_height = 0
+        elif (self.__image_height % EIGHT_BIT) != 0:
+            pad_height = EIGHT_BIT - (self.__image_height % EIGHT_BIT)
+
+        formated_image_array  = np.pad(self.image_array,  [(0,pad_height), (0, pad_width)], mode='constant')
+
         return formated_image_array
+
 
 
     def __convert_vertical(self):
@@ -122,9 +135,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         byte_array = ''
         index = 0
         pad_array = self.__format_image()
-        for y in range(self.__image_height):
-            for x in range(0,self.__image_width,EIGHT_BIT):
-                one_byte = pad_array[x:x+EIGHT_BIT,y]
+        height, width = pad_array.shape
+        print(pad_array)
+        for x in range(height):
+            for y in range(0,width,EIGHT_BIT):
+                one_byte = pad_array[x, y:y+EIGHT_BIT]
                 a = (''.join(str(i) for i in np.flip(one_byte)))
                 #a = (''.join(str(i) for i in one_byte))
                 byte_array += '0x'+format((int(a, 2)), '02x')+','
