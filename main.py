@@ -111,7 +111,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return formated_image_array
 
 
-
     def __convert_vertical(self):
         byte_array = ''
         index = 0
@@ -127,11 +126,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     byte_array += '\n'
                     
         byte_array = f'const unsigned char bitmap_{os.path.basename(self.__image_path)[:-4]} [] PROGMEM ={{\n' + byte_array.strip()[:-1] + '};' # remove the last comma  
-        #print(byte_array)
         self.plainTextEdit.setPlainText(byte_array)
         return byte_array 
 
     def __convert_horizontal(self):
+
+        image_size = f'#define {os.path.basename(self.__image_path)[:-4]}_width \t {self.__image_width}\n'
+        image_size += f'#define {os.path.basename(self.__image_path)[:-4]}_height \t {self.__image_height}\n'
+        #self.plainTextEdit.setPlainText(byte_array)
         byte_array = ''
         index = 0
         pad_array = self.__format_image()
@@ -140,15 +142,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         for x in range(height):
             for y in range(0,width,EIGHT_BIT):
                 one_byte = pad_array[x, y:y+EIGHT_BIT]
-                a = (''.join(str(i) for i in np.flip(one_byte)))
-                #a = (''.join(str(i) for i in one_byte))
+                a = (''.join(str(i) for i in np.flip(one_byte))) # flip LSB and MSB
                 byte_array += '0x'+format((int(a, 2)), '02x')+','
                 index += 1
                 if index%16 == 0:
                     byte_array += '\n'
                 
-        byte_array = '{\n' + byte_array.strip()[:-1] + '};' # remove the last comma  
-        self.plainTextEdit.setPlainText(byte_array)
+        byte_array = f'const unsigned char {os.path.basename(self.__image_path)[:-4]}_bmp [] PROGMEM ={{\n' + byte_array.strip()[:-1] + '};' # remove the last comma   
+        self.plainTextEdit.setPlainText(image_size+byte_array)
         return byte_array 
 
 
