@@ -53,7 +53,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             image_bmp = image.convert('1')
             self.image_array = np.asarray(image_bmp,dtype=int)
             self.__image_width, self.__image_height = self.image_array.shape
-            print(self.image_array)
+            #print(self.image_array)
             # display the image
             self.display_image()
             self.convert_button.setEnabled(True)
@@ -95,7 +95,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def format_image(self):
-
         if (self.__image_width % EIGHT_BIT) == 0:
             pad_width = 0
         elif (self.__image_width % EIGHT_BIT) != 0:
@@ -130,7 +129,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return byte_array 
 
     def convert_horizontal(self):
-
         image_size = f'#define {os.path.basename(self.__image_path)[:-4]}_width \t {self.__image_width}\n'
         image_size += f'#define {os.path.basename(self.__image_path)[:-4]}_height \t {self.__image_height}\n'
         #self.plainTextEdit.setPlainText(byte_array)
@@ -138,7 +136,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         index = 0
         pad_array = self.format_image()
         height, width = pad_array.shape
-        print(pad_array)
+        #print(pad_array)
         for x in range(height):
             for y in range(0,width,EIGHT_BIT):
                 one_byte = pad_array[x, y:y+EIGHT_BIT]
