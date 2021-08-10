@@ -55,13 +55,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.__image_width, self.__image_height = self.image_array.shape
             print(self.image_array)
             # display the image
-            self.__display_image()
+            self.display_image()
             self.convert_button.setEnabled(True)
             self.radio_vertical.setEnabled(True)
             self.radio_horizontal.setEnabled(True)
 
 
-    def __display_image(self):
+    def display_image(self):
         """
         Ref : https://www.codespeedy.com/displaying-an-image-using-pyqt5-in-python/
         """
@@ -76,10 +76,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         vertical = self.radio_vertical.isChecked()
         horizontal = self.radio_horizontal.isChecked()
         if vertical:
-            self.__convert_vertical()
+            self.convert_vertical()
             self.save_button.setEnabled(True)
         if horizontal:
-            self.__convert_horizontal()
+            self.convert_horizontal()
             self.save_button.setEnabled(True)
 
 
@@ -94,7 +94,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             f.write(text)
 
 
-    def __format_image(self):
+    def format_image(self):
 
         if (self.__image_width % EIGHT_BIT) == 0:
             pad_width = 0
@@ -111,10 +111,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return formated_image_array
 
 
-    def __convert_vertical(self):
+    def convert_vertical(self):
         byte_array = ''
         index = 0
-        pad_array = self.__format_image()
+        pad_array = self.format_image()
         for y in range(0,self.__image_width,EIGHT_BIT):
             for x in range(self.__image_height):
                 one_byte = pad_array[y:y+8,x]
@@ -129,14 +129,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plainTextEdit.setPlainText(byte_array)
         return byte_array 
 
-    def __convert_horizontal(self):
+    def convert_horizontal(self):
 
         image_size = f'#define {os.path.basename(self.__image_path)[:-4]}_width \t {self.__image_width}\n'
         image_size += f'#define {os.path.basename(self.__image_path)[:-4]}_height \t {self.__image_height}\n'
         #self.plainTextEdit.setPlainText(byte_array)
         byte_array = ''
         index = 0
-        pad_array = self.__format_image()
+        pad_array = self.format_image()
         height, width = pad_array.shape
         print(pad_array)
         for x in range(height):
