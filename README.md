@@ -41,7 +41,7 @@ Pillow, for  image manipulation module:
 ```
 pip install Pillow
 ```
-PyQt5, a gui developpement framework
+PyQt5, a framework for gui development
 ```
 pip install PyQt5
 ```
