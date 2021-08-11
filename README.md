@@ -7,4 +7,4 @@ Write down general information about your project. It is a good idea to always p
 
 
 ### Screenshot
-![Image text](/path/to/the/screenshot.png)
+![Image text](./images/GUI_Screenshot.png)
