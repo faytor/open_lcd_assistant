@@ -132,6 +132,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plainTextEdit.setPlainText(byte_array)
         return byte_array 
 
+
     def convert_horizontal(self):
         image_size = f'#define {os.path.basename(self.__image_path)[:-4]}_width \t {self.__image_width}\n'
         image_size += f'#define {os.path.basename(self.__image_path)[:-4]}_height \t {self.__image_height}\n'
