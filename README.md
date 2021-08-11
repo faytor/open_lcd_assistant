@@ -64,9 +64,11 @@ The program has been tested in Horizontal mode and only with u8g2 library
 - Test code
     * Use the arduino code [arduino_ug82_code](./arduino_ug82_code/arduino_ug82_code.ino) example
 
-![Adafruit Logo](./images/Test_Adafruit_Logo.jpg)
+- Test result
 
-![Arduino Logo](./images/Test_Arduino_Logo.jpg)
+     ![Adafruit Logo](./images/Test_Adafruit_Logo.jpg)
+
+     ![Arduino Logo](./images/Test_Arduino_Logo.jpg)
 
 ## Todo
 ***
