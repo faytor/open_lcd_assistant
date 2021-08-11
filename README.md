@@ -73,6 +73,7 @@ The program has been tested in Horizontal mode and only with u8g2 library
 ## Todo
 ***
 - Add a Checkbox to give the user the possibility to invert the image colors
+- Generate dmg and exe files 
 
 
 
