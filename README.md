@@ -7,6 +7,7 @@
 - [General Info](#general-info)
 - [Usage](#usage)
 - [Dependency](#dependency)
+- [Test](#test)
 - [Todo](#todo)
 - [References](#references)
 
@@ -49,6 +50,14 @@ NumPy package for array computing
 ```
 pip install numpy
 ```
+
+## Test
+
+- Software 
+    * [Arduino IDE](https://www.arduino.cc/en/software)
+    * [u8g2 Library](https://github.com/olikraus/u8g2/wiki)
+- Hardware
+    * [Heltec WiFi LoRa 32(V2)](https://heltec.org/project/wifi-lora-32/)
 
 
 
