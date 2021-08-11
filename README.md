@@ -52,6 +52,8 @@ pip install numpy
 ```
 
 ## Test
+***
+The program has been tested in Horizontal mode and only with u8g2 library
 
 - Software 
     * [Arduino IDE](https://www.arduino.cc/en/software)
