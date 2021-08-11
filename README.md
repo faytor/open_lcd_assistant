@@ -17,7 +17,7 @@
 
 ## General Info
 ***
-Write down general information about your project. It is a good idea to always put a project status in the readme file. This is where you can add it. 
+I have been looking for a tool to convert bitmap images into byte arrays that can be used in monochrom OLED or LCD displays. The best known tool I found to perform this task is [LCD Assistant](http://en.radzio.dxp.pl/bitmap_converter/) but it works only on Windows. So I had to write something similar that can be used in MacOS, Linux or even Windows. You can gess whay I called it Open LCD Assistant :)
 
 
 ## Usage
