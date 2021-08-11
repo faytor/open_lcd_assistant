@@ -58,10 +58,9 @@ pip install numpy
 
 
 
-
 ## References
 ***
-Some helpful reference used to write this program:
+Some useful references used to write this program:
 
 - [Displaying an image using PyQt5 in Python](https://www.codespeedy.com/displaying-an-image-using-pyqt5-in-python/)
 - [xbm editor](https://xbm.jazzychad.net/)
