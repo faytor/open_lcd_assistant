@@ -61,7 +61,12 @@ The program has been tested in Horizontal mode and only with u8g2 library
 - Hardware
     * [Heltec WiFi LoRa 32(V2)](https://heltec.org/project/wifi-lora-32/)
 
+- Test code
+    * Use the arduino code [arduino_ug82_code](./arduino_ug82_code/arduino_ug82_code.ino) example
 
+![Adafruit Logo](./images/Test_Adafruit_Logo.jpg)
+
+![Arduino Logo](./images/Test_Arduino_Logo.jpg)
 
 ## Todo
 ***

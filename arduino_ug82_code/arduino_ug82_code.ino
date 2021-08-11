@@ -174,8 +174,8 @@ void loop() {
   u8g2.firstPage();
   
   do {
-        u8g2.drawXBMP(0, 0, arduino_logo_width, arduino_logo_height, arduino_logo_bmp);  // Arduino Logo
-        //u8g2.drawXBMP(0, 0, adafruit_industries_width, adafruit_industries_height, adafruit_industries_bmp);  // Adafruit Logo
+        //u8g2.drawXBMP(0, 0, arduino_logo_width, arduino_logo_height, arduino_logo_bmp);  // Arduino Logo
+        u8g2.drawXBMP(0, 0, adafruit_industries_width, adafruit_industries_height, adafruit_industries_bmp);  // Adafruit Logo
 
      } while (u8g2.nextPage());
 
