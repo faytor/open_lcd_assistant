@@ -34,7 +34,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def init_gui(self):
-        self.radio_vertical.setChecked(True)
+        self.radio_horizontal.setChecked(True)
         self.convert_button.setEnabled(False)
         self.save_button.setEnabled(False)
         self.radio_vertical.setEnabled(False)
@@ -52,7 +52,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             # convert it to monochrom bitmap and creat np array
             image_bmp = image.convert('1')
             self.image_array = np.asarray(image_bmp,dtype=int)
-            self.__image_width, self.__image_height = self.image_array.shape
+            #width, height = image_bmp.size
+            #print("width", width, "height", height )
+            self.__image_height, self.__image_width = self.image_array.shape
+            print("self.__image_width", self.__image_width, "self.__image_height", self.__image_height)
             #print(self.image_array)
             # display the image
             self.display_image()
@@ -136,6 +139,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         index = 0
         pad_array = self.format_image()
         height, width = pad_array.shape
+        # test invert image
+        #pad_array = 1 - pad_array
         #print(pad_array)
         for x in range(height):
             for y in range(0,width,EIGHT_BIT):
