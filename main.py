@@ -6,16 +6,17 @@ import numpy as np
 import sys
 import os
 from pathlib import Path
+import inspect
 
-"""
-References:
-    - https://xbm.jazzychad.net/
-    - http://javl.github.io/image2cpp/
-"""
-
-main_gui_file_name = "open_lcd_assistant/main_gui.ui"
+# Constants
 EIGHT_BIT = 8
 
+# Get the root directory
+root = os.getcwd()
+# Generate the path to the gui file
+main_gui_file_name = os.path.join(root, "main_gui.ui")
+
+# Load the main GUI
 Ui_MainWindow, QtBaseClass = uic.loadUiType(main_gui_file_name)
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -28,6 +29,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+        self.setWindowTitle("Open LCD Assisstant")
         self.init_gui()
         self.load_button.clicked.connect(self.load_image)
         self.save_button.clicked.connect(self.save_bmp_txt)
