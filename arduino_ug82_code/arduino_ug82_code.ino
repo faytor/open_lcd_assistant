@@ -212,7 +212,9 @@ void loop() {
   
   do {
         //u8g2.drawXBMP(0, 0, arduino_logo_width, arduino_logo_height, arduino_logo_bmp);  // Arduino Logo
-        u8g2.drawXBMP(0, 0, Luna23_width, Luna23_height, Luna23_bmp);  // Adafruit Logo
+        //u8g2.drawXBMP(0, 0, Luna23_width, Luna23_height, Luna23_bmp);  // Adafruit Logo
+        u8g2.setFont(u8g2_font_ncenB14_tr);
+        u8g2.drawStr(0,15,"Hello World!");
 
      } while (u8g2.nextPage());
 

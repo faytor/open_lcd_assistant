@@ -55,11 +55,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             # convert it to monochrom bitmap and creat np array
             image_bmp = image.convert('1')
             self.image_array = np.asarray(image_bmp,dtype=int)
-            #width, height = image_bmp.size
-            #print("width", width, "height", height )
             self.__image_height, self.__image_width = self.image_array.shape
-            print("self.__image_width", self.__image_width, "self.__image_height", self.__image_height)
-            #print(self.image_array)
             # display the image
             self.display_image()
             self.convert_button.setEnabled(True)
@@ -124,7 +120,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for x in range(self.__image_height):
                 one_byte = pad_array[y:y+8,x]
                 a = (''.join(str(y) for y in np.flip(one_byte)))
-                #a = (''.join(str(y) for y in one_byte))
                 byte_array += '0x'+format((int(a, 2)), '02x')+','
                 index += 1
                 if index%16 == 0:
@@ -138,14 +133,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def convert_horizontal(self):
         image_size = f'#define {os.path.basename(self.__image_path)[:-4]}_width \t {self.__image_width}\n'
         image_size += f'#define {os.path.basename(self.__image_path)[:-4]}_height \t {self.__image_height}\n'
-        #self.plainTextEdit.setPlainText(byte_array)
         byte_array = ''
         index = 0
         pad_array = self.format_image()
         height, width = pad_array.shape
         # test invert image
         #pad_array = 1 - pad_array
-        #print(pad_array)
         for x in range(height):
             for y in range(0,width,EIGHT_BIT):
                 one_byte = pad_array[x, y:y+EIGHT_BIT]
