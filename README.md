@@ -51,6 +51,11 @@ NumPy package for array computing
 pip install numpy
 ```
 
+Or, more simply by using the following command, all the dependencies will be installed automatically
+```
+pip install requirements.txt
+```
+
 ## Test
 ***
 The program has been tested in Horizontal mode and only with u8g2 library
