@@ -1,29 +1,31 @@
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtGui import QPixmap
-from PIL import Image
+from PIL import Image, ImageOps
+from PIL.ImageQt import ImageQt
 import numpy as np
 import sys
 import os
-from pathlib import Path
-import inspect
+
+
 
 # Constants
 EIGHT_BIT = 8
+main_gui_file_name = "main_gui.ui"
 
-# Get the root directory
-root = os.getcwd()
 # Generate the path to the gui file
-main_gui_file_name = os.path.join(root, "main_gui.ui")
-
+qtCreatorFile = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), main_gui_file_name) 
 # Load the main GUI
-Ui_MainWindow, QtBaseClass = uic.loadUiType(main_gui_file_name)
+Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     __image_path = None
     __image_width = 0
     __image_height = 0
+    __is_inverted = False # Flag to keep track if the image was inverted 
     image_array = None
+    image = None
 
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
@@ -34,6 +36,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.load_button.clicked.connect(self.load_image)
         self.save_button.clicked.connect(self.save_bmp_txt)
         self.convert_button.clicked.connect(self.convert_image)
+        self.invert_button.clicked.connect(self.invert_image)
 
 
     def init_gui(self):
@@ -42,6 +45,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.save_button.setEnabled(False)
         self.radio_vertical.setEnabled(False)
         self.radio_horizontal.setEnabled(False)
+        self.invert_button.setEnabled(False)
 
 
     def load_image(self):
@@ -51,16 +55,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if os.path.isfile(self.__image_path):
             # Load the image
-            image = Image.open(self.__image_path)
-            # convert it to monochrom bitmap and creat np array
-            image_bmp = image.convert('1')
-            self.image_array = np.asarray(image_bmp,dtype=int)
-            self.__image_height, self.__image_width = self.image_array.shape
-            # display the image
+            self.image = Image.open(self.__image_path)
+            # Convert it to monochrom bitmap and creat np array
+            self.image_to_array()
+            # Display the image
             self.display_image()
+            # Set is inverted? flag to default
+            self.__is_inverted = False
+            # Enable buttons and co.
             self.convert_button.setEnabled(True)
             self.radio_vertical.setEnabled(True)
             self.radio_horizontal.setEnabled(True)
+            self.invert_button.setEnabled(True)
 
 
     def display_image(self):
@@ -83,6 +89,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if horizontal:
             self.convert_horizontal()
             self.save_button.setEnabled(True)
+
+
+    def image_to_array(self):
+        """
+        Convert the image to monochrom bitmap and creat np array
+        """
+        image_bmp = self.image.convert('1')
+        self.image_array = np.asarray(image_bmp,dtype=int)
+        self.__image_height, self.__image_width = self.image_array.shape
 
 
     def save_bmp_txt(self):
@@ -112,6 +127,22 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return formated_image_array
 
 
+    def invert_image(self):
+        im_invert = ImageOps.invert(self.image)
+        self.image = im_invert
+        qim = ImageQt(self.image)
+        pixmap = QtGui.QPixmap.fromImage(qim)
+        scene = QtWidgets.QGraphicsScene(self)
+        item = QtWidgets.QGraphicsPixmapItem(pixmap)
+        scene.addItem(item)
+        self.image_view.setScene(scene)
+        #Set the flag to inverted state
+        self.__is_inverted = not (self.__is_inverted)
+        # Display a message to the status bar only if the image is inverted
+        message = "Image inverted" if self.__is_inverted else ""
+        self.statusBar().showMessage(message)
+
+
     def convert_vertical(self):
         byte_array = ''
         index = 0
@@ -131,14 +162,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def convert_horizontal(self):
+        self.image_to_array()
         image_size = f'#define {os.path.basename(self.__image_path)[:-4]}_width \t {self.__image_width}\n'
         image_size += f'#define {os.path.basename(self.__image_path)[:-4]}_height \t {self.__image_height}\n'
         byte_array = ''
         index = 0
         pad_array = self.format_image()
         height, width = pad_array.shape
-        # test invert image
-        #pad_array = 1 - pad_array
+
         for x in range(height):
             for y in range(0,width,EIGHT_BIT):
                 one_byte = pad_array[x, y:y+EIGHT_BIT]
