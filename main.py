@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon
 from PIL import Image, ImageOps
 from PIL.ImageQt import ImageQt
 import numpy as np
@@ -40,6 +40,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def init_gui(self):
+        # Set the window's size automatically to the UI made in QtDesigner
+        self.setFixedSize(self.geometry().width(),self.geometry().height())
         self.radio_horizontal.setChecked(True)
         self.convert_button.setEnabled(False)
         self.save_button.setEnabled(False)
@@ -187,6 +189,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    app.setWindowIcon(QIcon("open_lcd_assistant/images/icon.png"))
+    app.setApplicationName("Open LCD")
     window = MyApp()
     window.show()
     sys.exit(app.exec_())

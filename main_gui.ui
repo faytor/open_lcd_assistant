@@ -111,7 +111,7 @@
    <widget class="QRadioButton" name="radio_horizontal">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>240</x>
       <y>614</y>
       <width>100</width>
       <height>20</height>
