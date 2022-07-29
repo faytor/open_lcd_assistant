@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QFileDialog
+from PyQt5.QtWidgets import QApplication, QFileDialog, QStyle
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtGui import QPixmap, QIcon
 from PIL import Image, ImageOps
@@ -48,7 +48,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radio_vertical.setEnabled(False)
         self.radio_horizontal.setEnabled(False)
         self.invert_button.setEnabled(False)
+        # Add somne styl to the convert button
+        pixmapi = QStyle.SP_CommandLink
+        icon = self.style().standardIcon(pixmapi)
+        self.convert_button.setIcon(icon)
 
+        pixmapi = QStyle.SP_BrowserReload
+        icon = self.style().standardIcon(pixmapi)
+        self.invert_button.setIcon(icon)
+
+        pixmapi = QStyle.SP_DialogSaveButton
+        icon = self.style().standardIcon(pixmapi)
+        self.save_button.setIcon(icon)
+
+        
 
     def load_image(self):
         # Get the image path
