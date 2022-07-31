@@ -30,7 +30,7 @@
    <widget class="QLineEdit" name="path_line_edit">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>160</x>
       <y>14</y>
       <width>381</width>
       <height>20</height>
