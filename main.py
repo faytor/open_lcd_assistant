@@ -12,6 +12,9 @@ import os
 # Constants
 EIGHT_BIT = 8
 main_gui_file_name = "main_gui.ui"
+# Path to the icon
+script_dir_path = os.path.dirname(os.path.realpath(__file__))
+icon_path = os.sep.join([script_dir_path, "images", "icon.png"])
 
 # Generate the path to the gui file
 qtCreatorFile = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), main_gui_file_name) 
@@ -202,7 +205,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    app.setWindowIcon(QIcon("open_lcd_assistant/images/icon.png"))
+    app.setWindowIcon(QIcon(icon_path))
     app.setApplicationName("Open LCD")
     window = MyApp()
     window.show()
