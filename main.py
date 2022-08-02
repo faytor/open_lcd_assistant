@@ -68,7 +68,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def load_image(self):
         # Get the image path
-        self.__image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Single File', QtCore.QDir.rootPath() , '*.bmp')
+        self.__image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Single File', QtCore.QDir.rootPath() , 'Image Files(*.png *.jpg *.bmp)')
         self.path_line_edit.setText(self.__image_path)
 
         if os.path.isfile(self.__image_path):
@@ -88,14 +88,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def display_image(self):
-        """
-        Ref : https://www.codespeedy.com/displaying-an-image-using-pyqt5-in-python/
-        """
+        qim = ImageQt(self.image)
+        pixmap = QtGui.QPixmap.fromImage(qim)
         scene = QtWidgets.QGraphicsScene(self)
-        pixmap = QPixmap(self.__image_path)
         item = QtWidgets.QGraphicsPixmapItem(pixmap)
         scene.addItem(item)
         self.image_view.setScene(scene)
+
 
 
     def convert_image(self):
@@ -113,8 +112,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         Convert the image to monochrom bitmap and creat np array
         """
-        image_bmp = self.image.convert('1')
-        self.image_array = np.asarray(image_bmp,dtype=int)
+        self.image = self.image.convert('1')
+        self.image_array = np.asarray(self.image,dtype=int)
         self.__image_height, self.__image_width = self.image_array.shape
 
 
@@ -146,14 +145,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def invert_image(self):
-        im_invert = ImageOps.invert(self.image)
-        self.image = im_invert
-        qim = ImageQt(self.image)
-        pixmap = QtGui.QPixmap.fromImage(qim)
-        scene = QtWidgets.QGraphicsScene(self)
-        item = QtWidgets.QGraphicsPixmapItem(pixmap)
-        scene.addItem(item)
-        self.image_view.setScene(scene)
+        # Convert the image to a supported inversion format, before inverting 
+        # https://stackoverflow.com/questions/41421033/python-invert-binary-image-invert-fails
+        self.image = ImageOps.invert( self.image.convert('RGB') )
+        #Display the new image
+        self.display_image()
         #Set the flag to inverted state
         self.__is_inverted = not (self.__is_inverted)
         # Display a message to the status bar only if the image is inverted
