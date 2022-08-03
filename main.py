@@ -65,7 +65,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.save_button.setIcon(icon)
 
         
-
     def load_image(self):
         # Get the image path
         self.__image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Single File', QtCore.QDir.rootPath() , 'Image Files(*.png *.jpg *.bmp)')
@@ -94,7 +93,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         item = QtWidgets.QGraphicsPixmapItem(pixmap)
         scene.addItem(item)
         self.image_view.setScene(scene)
-
 
 
     def convert_image(self):
