@@ -96,3 +96,4 @@ Some useful references used to write this program:
 - [Displaying an image using PyQt5 in Python](https://www.codespeedy.com/displaying-an-image-using-pyqt5-in-python/)
 - [xbm editor](https://xbm.jazzychad.net/)
 - [image2cpp](http://javl.github.io/image2cpp/)
+- [stackoverflow](https://stackoverflow.com/questions/41421033/python-invert-binary-image-invert-fails)
