@@ -36,6 +36,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     image = None
     original_image = None 
 
+    #-------------------------------
+    # Constructor
+    #-------------------------------
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -51,7 +54,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.width_lineEdit.textEdited.connect(self.set_new_height)
         self.height_lineEdit.textEdited.connect(self.set_new_width)
 
-
+    #-------------------------------
+    # Initialize some GUI's element
+    #-------------------------------
     def init_gui(self):
         # Set the window's size automatically to the UI made in QtDesigner
         self.setFixedSize(self.geometry().width(),self.geometry().height())
@@ -86,8 +91,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.resize_button.setEnabled(False)
         self.reset_button.setEnabled(False)
     
-
+    #---------------------------------------------------
+    # Callback function for the load image button
+    #---------------------------------------------------
     def load_image(self):
+        '''
+        Callback function for the load image button
+        Loads the image to be converted
+        '''
         # Get the image path
         self.__image_path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Single File','', 'Image Files(*.png *.jpg *.bmp)')
         self.path_line_edit.setText(self.__image_path)
@@ -118,10 +129,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.resize_button.setEnabled(True)
             self.reset_button.setEnabled(True)
 
-
+    #------------------------------------------
+    # Display the image in the GUI
+    # Parameters:
+    #     image : The image to be displayed
+    #------------------------------------------
     def display_image(self, image):
         '''
         Show the image in the GUI
+            Parameters:
+                image : The image to be displayed
         '''
         qim = ImageQt(image)
         pixmap = QtGui.QPixmap.fromImage(qim)
@@ -130,8 +147,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         scene.addItem(item)
         self.image_view.setScene(scene)
 
-
+    #------------------------------------------
+    # Callback function for the conver button
+    #------------------------------------------
     def convert_image(self):
+        '''
+        Callback function for the conver button.
+        Select the conversion method
+        '''
         vertical = self.radio_vertical.isChecked()
         horizontal = self.radio_horizontal.isChecked()
         if vertical:
@@ -141,7 +164,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.convert_horizontal()
             self.save_button.setEnabled(True)
 
-
+    #----------------------------------------------------------
+    # Convert the image to monochrom bitmap and creat Numpy array
+    #----------------------------------------------------------
     def image_to_array(self):
         '''
         Convert the image to monochrom bitmap and creat Numpy array
@@ -150,7 +175,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.image_array = np.asarray(self.image,dtype=int)
         self.__image_height, self.__image_width = self.image_array.shape
 
-
+    #---------------------------------------------------
+    # Save the result of the bitmap array in a text file
+    #---------------------------------------------------
     def save_bmp_txt(self):
         '''
         Save the result of the bitmap array in a text file
@@ -164,8 +191,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         with open(save_path, 'w') as f:
             f.write(text)
 
-
+    #------------------------------
+    # Format the image 
+    #------------------------------
     def format_image(self):
+        '''
+        Adjust the width and height so that they can be divided by 8.
+        1 Byte = 8 Bits
+        '''
         if (self.__image_width % EIGHT_BIT) == 0:
             pad_width = 0
         elif (self.__image_width % EIGHT_BIT) != 0:
@@ -180,11 +213,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         return formated_image_array
 
-
+    #------------------------------
+    # Invert the image pixel color
+    #------------------------------
     def invert_image(self):
         '''
-        Convert the image to a supported inversion format, before inverting 
+        Invert the image pixel color
         '''
+        # Convert the image to a supported inversion format, before inverting 
         self.image = ImageOps.invert( self.image.convert('RGB') )
         #Display the new image
         self.display_image(self.image)
@@ -194,7 +230,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         message = "Image inverted" if self.__is_inverted else ""
         self.statusBar().showMessage(message)
 
-
+    #---------------------------------------------------------------------
+    # Calculate & Set the new height according to the entred value of the width
+    #---------------------------------------------------------------------
     def set_new_height(self):
         # Get the new Width and Height from the GUI
         new_width = self.width_lineEdit.text()
@@ -203,7 +241,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 new_height = round(int(new_width) / self.image_ratio)
                 self.height_lineEdit.setText(str(new_height))
 
-
+    #---------------------------------------------------------------------
+    # Calculate & Set the new width according to the entred value of the Height
+    #---------------------------------------------------------------------
     def set_new_width(self):
         # Get the new Width and Height from the GUI
         new_height = self.height_lineEdit.text()
@@ -212,9 +252,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 new_width = round(int(new_height) * self.image_ratio)
                 self.width_lineEdit.setText(str(new_width))
 
+    #----------------------------------------------------------
+    # Resize the original image to the new size (Width, Height)
+    #----------------------------------------------------------
     def resize_image(self):
         '''
-        Resize the image to the new size either by entering :
+        Resize the original image to the new size (Width, Height)
             Parameters:
             Width, Height : inputs from the G
         '''
@@ -231,7 +274,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             _ = msg.exec_()
 
         elif int(new_width) == self.original_width and int(new_height) == self.original_height and (self.image == self.original_image):
-            pass
+            pass # Just do nothing if everything is the same
         
         else:
             new_width = int(new_width)
@@ -241,17 +284,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.display_image(self.image)
             self.plainTextEdit.clear()
 
-
+    #-------------------------------------------
+    # Reset the edited image to the original one
+    #-------------------------------------------
     def reset_image(self):
         '''
-        Reset the edited image to the original
+        Reset the edited image to the original one
         '''
         # Get the new Width and Height from the GUI
         new_width = self.width_lineEdit.text()
         new_height = self.height_lineEdit.text()
 
         if int(new_width) == self.original_width and int(new_height) == self.original_height and (self.image == self.original_image):
-            pass
+            pass # If everything is as the original, just pass...
         else:
             self.image = self.original_image
             self.width_lineEdit.setText(str(self.original_width))
@@ -261,8 +306,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.display_image(self.original_image)
             self.plainTextEdit.clear()
 
-
-
+    #----------------------------------------------------------------------
+    # Convert the image into bitmap array using the vertical (byte orientation) method
+    #----------------------------------------------------------------------
     def convert_vertical(self):
         '''
         Convert the image into bitmap array using the vertical (byte orientation) method
@@ -283,7 +329,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.plainTextEdit.setPlainText(byte_array)
         return byte_array 
 
-
+    #----------------------------------------------------------------------
+    # Convert the image into bitmap array using the horizontal (byte orientation) method
+    #----------------------------------------------------------------------
     def convert_horizontal(self):
         '''
         Convert the image into bitmap array using the horizontal (byte orientation) method
@@ -311,7 +359,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 #------------------------------------------------
-#                   App creation
+#                 Start the App
 #------------------------------------------------
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
