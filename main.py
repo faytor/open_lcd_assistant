@@ -36,7 +36,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     image = None
     original_image = None 
 
-
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -51,24 +50,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.reset_button.clicked.connect(self.reset_image)
         self.width_lineEdit.textEdited.connect(self.set_new_height)
         self.height_lineEdit.textEdited.connect(self.set_new_width)
-
-
-    def set_new_height(self):
-        # Get the new Width and Height from the GUI
-        new_width = self.width_lineEdit.text()
-        if self.keep_ratio.isChecked():
-            if new_width:
-                new_height = round(int(new_width) / self.image_ratio)
-                self.height_lineEdit.setText(str(new_height))
-
-
-    def set_new_width(self):
-        # Get the new Width and Height from the GUI
-        new_height = self.height_lineEdit.text()
-        if self.keep_ratio.isChecked():
-            if new_height:
-                new_width = round(int(new_height) * self.image_ratio)
-                self.width_lineEdit.setText(str(new_width))
 
 
     def init_gui(self):
@@ -101,6 +82,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.width_lineEdit.setEnabled(False)
         self.height_lineEdit.setEnabled(False)
         self.keep_ratio.setEnabled(False)
+        self.keep_ratio.setChecked(True)
         self.resize_button.setEnabled(False)
         self.reset_button.setEnabled(False)
     
@@ -119,8 +101,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.image_ratio = self.original_width/self.original_height
             # Convert it to monochrom bitmap and creat np array
             self.image_to_array()
+            # Keep the original image after monochrom conversion
+            self.original_image = self.image
             # Display the image
-            self.display_image()
+            self.display_image(self.image)
             # Set is inverted? flag to default
             self.__is_inverted = False
             # Enable buttons and co.
@@ -135,11 +119,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.reset_button.setEnabled(True)
 
 
-    def display_image(self):
+    def display_image(self, image):
         '''
         Show the image in the GUI
         '''
-        qim = ImageQt(self.image)
+        qim = ImageQt(image)
         pixmap = QtGui.QPixmap.fromImage(qim)
         scene = QtWidgets.QGraphicsScene(self)
         item = QtWidgets.QGraphicsPixmapItem(pixmap)
@@ -163,7 +147,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Convert the image to monochrom bitmap and creat Numpy array
         '''
         self.image = self.image.convert('1')
-        self.original_image = self.image
         self.image_array = np.asarray(self.image,dtype=int)
         self.__image_height, self.__image_width = self.image_array.shape
 
@@ -204,13 +187,30 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         '''
         self.image = ImageOps.invert( self.image.convert('RGB') )
         #Display the new image
-        self.display_image()
+        self.display_image(self.image)
         #Set the flag to inverted state
         self.__is_inverted = not (self.__is_inverted)
         # Display a message to the status bar only if the image is inverted
         message = "Image inverted" if self.__is_inverted else ""
         self.statusBar().showMessage(message)
 
+
+    def set_new_height(self):
+        # Get the new Width and Height from the GUI
+        new_width = self.width_lineEdit.text()
+        if self.keep_ratio.isChecked():
+            if new_width:
+                new_height = round(int(new_width) / self.image_ratio)
+                self.height_lineEdit.setText(str(new_height))
+
+
+    def set_new_width(self):
+        # Get the new Width and Height from the GUI
+        new_height = self.height_lineEdit.text()
+        if self.keep_ratio.isChecked():
+            if new_height:
+                new_width = round(int(new_height) * self.image_ratio)
+                self.width_lineEdit.setText(str(new_width))
 
     def resize_image(self):
         '''
@@ -230,24 +230,37 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             msg.setInformativeText("Please enter a valide value")
             _ = msg.exec_()
 
-        else :
+        elif int(new_width) == self.original_width and int(new_height) == self.original_height and (self.image == self.original_image):
+            pass
+        
+        else:
             new_width = int(new_width)
             new_height = int(new_height)
             self.resized_image = self.image.resize((new_width, new_height))
             self.image = self.resized_image
-            self.display_image()
+            self.display_image(self.image)
+            self.plainTextEdit.clear()
 
 
     def reset_image(self):
         '''
         Reset the edited image to the original
         '''
-        self.image = self.original_image
-        self.width_lineEdit.setText(str(self.original_width))
-        self.height_lineEdit.setText(str(self.original_height))
-        self.__is_inverted = False
-        self.statusBar().clearMessage()
-        self.display_image()
+        # Get the new Width and Height from the GUI
+        new_width = self.width_lineEdit.text()
+        new_height = self.height_lineEdit.text()
+
+        if int(new_width) == self.original_width and int(new_height) == self.original_height and (self.image == self.original_image):
+            pass
+        else:
+            self.image = self.original_image
+            self.width_lineEdit.setText(str(self.original_width))
+            self.height_lineEdit.setText(str(self.original_height))
+            self.__is_inverted = False
+            self.statusBar().clearMessage()
+            self.display_image(self.original_image)
+            self.plainTextEdit.clear()
+
 
 
     def convert_vertical(self):
