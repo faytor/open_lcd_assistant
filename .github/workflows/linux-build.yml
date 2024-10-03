@@ -62,10 +62,10 @@ jobs:
         # Copy your icon file into the AppDir from images directory.
         cp images/icon.png MyApp.AppDir/myapp.png  # Copy the icon to the AppDir.
 
-    - name: Verify Executable in AppDir
+    - name: Verify AppDir Contents
       run: |
-        ls -l MyApp.AppDir/usr/bin/  # Check if main is copied correctly
-
+        ls -l MyApp.AppDir/  # List contents of AppDir to verify files exist.
+   
     - name: Build AppImage
       run: |
         ./appimagetool-x86_64.AppImage MyApp.AppDir MyApp-x86_64.AppImage
