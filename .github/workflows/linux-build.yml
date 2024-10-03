@@ -51,16 +51,14 @@ jobs:
         
         chmod +x MyApp.AppDir/AppRun
         
-        # Create .desktop file with correct icon reference.
+        # Create .desktop file without an icon reference.
         echo "[Desktop Entry]
         Name=MyApp
         Exec=main
-        Icon=myapp  # Reference to the icon file (without extension)
         Type=Application
         Categories=Utility;" > MyApp.AppDir/myapp.desktop
         
-        # Copy your icon file into the AppDir from images directory.
-        cp images/icon.png MyApp.AppDir/myapp.png  # Copy the icon to the AppDir.
+        # No need to copy an icon since we're skipping it.
 
     - name: Verify AppDir Contents
       run: |
