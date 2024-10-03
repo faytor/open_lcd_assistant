@@ -57,8 +57,6 @@ jobs:
         Exec=main
         Type=Application
         Categories=Utility;" > MyApp.AppDir/myapp.desktop
-        
-        # No need to copy an icon since we're skipping it.
 
     - name: Verify AppDir Contents
       run: |
