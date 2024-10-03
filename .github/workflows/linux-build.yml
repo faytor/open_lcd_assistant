@@ -25,6 +25,10 @@ jobs:
       run: |
         pyinstaller --onefile --windowed main.py
 
+    - name: List Dist Directory
+      run: |
+        ls -l dist/  # Check if main executable is here
+
     - name: Install FUSE and AppImage tools
       run: |
         sudo apt-get update
@@ -36,21 +40,30 @@ jobs:
       run: |
         mkdir -p MyApp.AppDir/usr/bin
         cp dist/main MyApp.AppDir/usr/bin/
+        
+        # Create AppRun script
         cat > MyApp.AppDir/AppRun << EOL
         #!/bin/bash
-        HERE="$(dirname "$(readlink -f "${0}")")"
-        export PATH="${HERE}/usr/bin/:${PATH}"
-        export LD_LIBRARY_PATH="${HERE}/usr/lib/:${LD_LIBRARY_PATH}"
-        exec "${HERE}/usr/bin/main" "$@"
+        HERE="\$(dirname "\$(readlink -f "\${0}")")"
+        export PATH="\${HERE}/usr/bin:\${PATH}"
+        exec "\${HERE}/usr/bin/main" "\$@"
         EOL
+        
         chmod +x MyApp.AppDir/AppRun
+        
+        # Create .desktop file
         echo "[Desktop Entry]
         Name=MyApp
         Exec=main
-        Icon=myapp
+        Icon=myapp  # Ensure you have an icon file or change this line accordingly.
         Type=Application
         Categories=Utility;" > MyApp.AppDir/myapp.desktop
-        touch MyApp.AppDir/myapp.png  # Replace this with your actual icon
+        
+        touch MyApp.AppDir/myapp.png  # Replace this with your actual icon if needed.
+
+    - name: Verify Executable in AppDir
+      run: |
+        ls -l MyApp.AppDir/usr/bin/  # Check if main is copied correctly
 
     - name: Build AppImage
       run: |
