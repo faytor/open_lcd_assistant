@@ -32,7 +32,7 @@ jobs:
     - name: Install FUSE and AppImage tools
       run: |
         sudo apt-get update
-        sudo apt-get install -y libfuse2 wget
+        sudo apt-get install -y libfuse2 wget appstream  # Install appstreamcli if desired.
         wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool-x86_64.AppImage
 
@@ -51,15 +51,16 @@ jobs:
         
         chmod +x MyApp.AppDir/AppRun
         
-        # Create .desktop file
+        # Create .desktop file with correct icon reference.
         echo "[Desktop Entry]
         Name=MyApp
         Exec=main
-        Icon=myapp  # Ensure you have an icon file or change this line accordingly.
+        Icon=myapp  # Reference to the icon file (without extension)
         Type=Application
         Categories=Utility;" > MyApp.AppDir/myapp.desktop
         
-        touch MyApp.AppDir/myapp.png  # Replace this with your actual icon if needed.
+        # Copy your icon file into the AppDir from images directory.
+        cp images/icon.png MyApp.AppDir/myapp.png  # Copy the icon to the AppDir.
 
     - name: Verify Executable in AppDir
       run: |
