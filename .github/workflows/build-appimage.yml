@@ -1,0 +1,50 @@
+name: Build AppImage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-appimage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgl1-mesa-dev libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Install AppImage tools
+      run: |
+        sudo apt-get install -y python3-pip python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace
+        sudo wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /usr/local/bin/appimagetool
+        sudo chmod +x /usr/local/bin/appimagetool
+    - name: Build AppImage
+      run: |
+        pip install pyinstaller
+        pyinstaller --name=OpenLCDAssisstant --windowed --add-data="resources:resources" main.py
+        mkdir -p AppDir/usr/bin AppDir/usr/lib AppDir/usr/share/applications AppDir/usr/share/icons/hicolor/256x256/apps
+        cp dist/OpenLCDAssisstant/OpenLCDAssisstant AppDir/usr/bin/
+        cp img/icon.png AppDir/usr/share/icons/hicolor/256x256/apps/
+        cp -r dist/OpenLCDAssisstant/* AppDir/usr/lib/
+        cat > AppDir/usr/share/applications/OpenLCDAssisstant.desktop <<EOF
+        [Desktop Entry]
+        Name=OpenLCDAssisstant
+        Exec=OpenLCDAssisstant
+        Icon=icon
+        Type=Application
+        Categories=Utility;
+        EOF
+        appimagetool AppDir
+    - name: Upload AppImage
+      uses: actions/upload-artifact@v2
+      with:
+        name: OpenLCDAssisstant-x86_64.AppImage
+        path: OpenLCDAssisstant-x86_64.AppImage
